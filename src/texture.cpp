@@ -16,39 +16,47 @@ namespace pktx
         if(e != KTX_SUCCESS) return ezr::err(e);
         return t;
     }
-    bool Texture::IsArray()
+    bool Texture::IsArray() const
     {
         return texture->isArray;
     }
-    bool Texture::IsCubemap()
+    bool Texture::IsCubemap() const
     {
         return texture->isCubemap;
     }
-    uint32_t Texture::BaseWidth()
+    uint32_t Texture::BaseWidth() const
     {
         return texture->baseWidth;
     }
-    uint32_t Texture::BaseHeight()
+    uint32_t Texture::BaseHeight() const
     {
         return texture->baseHeight;
     }
-    uint32_t Texture::BaseDepth()
+    uint32_t Texture::BaseDepth() const
     {
         return texture->baseDepth;
     }
-    uint32_t Texture::NumDimensions()
+    uint32_t Texture::NumDimensions() const
     {
         return texture->numDimensions;
     }
-    uint32_t Texture::NumLevels()
+    uint32_t Texture::NumFaces() const
+    {
+        return texture->numFaces;
+    }
+    uint32_t Texture::NumLayers() const
+    {
+        return texture->numLayers;
+    }
+    uint32_t Texture::NumLevels() const
     {
         return texture->numLevels;
     }
-    size_t Texture::DataSize()
+    size_t Texture::DataSize() const
     {
         return texture->dataSize;
     }
-    size_t Texture::ElementSize()
+    size_t Texture::ElementSize() const
     {
         return ktxTexture_GetElementSize(texture);
     }
@@ -59,15 +67,15 @@ namespace pktx
         if(e != KTX_SUCCESS) return ezr::err(e);
         return ktxTexture_GetData(texture) + off;
     }
-    ktxTexture* Texture::RawTexture()
+    ktxTexture* Texture::RawTexture() const
     {
         return texture;
     }
-    bool Texture::NeedsTranscode()
+    bool Texture::NeedsTranscode() const
     {
         return ktxTexture_NeedsTranscoding(texture);
     }
-    Version Texture::GetVersion()
+    Version Texture::GetVersion() const
     {
         return texture->classId == ktxTexture1_c ? Version::One : Version::Two;
     }

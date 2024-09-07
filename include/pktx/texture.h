@@ -14,33 +14,36 @@ namespace pktx
         Texture() = default;
         Texture(const Texture&) = delete;
         Texture(Texture&& other) { texture = other.texture; other.texture = nullptr; }
+        void operator=(Texture&& other) { texture = other.texture; other.texture = nullptr; }
         ~Texture() { if(texture) ktxTexture_Destroy(texture); }
     public:
         [[nodiscard]] static ezr::result<Texture, ktx_error_code_e> CreateFromNamedFile(std::string_view file_name, ktxTextureCreateFlags flags);
         [[nodiscard]] static ezr::result<Texture, ktx_error_code_e> CreateFromMemory(uint8_t* memory, size_t size, ktxTextureCreateFlags flags);
 
         
-        [[nodiscard]] bool IsArray();
-        [[nodiscard]] bool IsCubemap();
+        [[nodiscard]] bool IsArray() const;
+        [[nodiscard]] bool IsCubemap() const;
 
-        [[nodiscard]] uint32_t BaseWidth();
-        [[nodiscard]] uint32_t BaseHeight();
-        [[nodiscard]] uint32_t BaseDepth();
+        [[nodiscard]] uint32_t BaseWidth() const;
+        [[nodiscard]] uint32_t BaseHeight() const;
+        [[nodiscard]] uint32_t BaseDepth() const;
 
-        [[nodiscard]] uint32_t NumDimensions();
-        [[nodiscard]] uint32_t NumLevels();
+        [[nodiscard]] uint32_t NumDimensions() const;
+        [[nodiscard]] uint32_t NumLevels() const;
+        [[nodiscard]] uint32_t NumFaces() const;
+        [[nodiscard]] uint32_t NumLayers() const;
 
-        [[nodiscard]] size_t DataSize();
-        [[nodiscard]] size_t ElementSize();
+        [[nodiscard]] size_t DataSize() const;
+        [[nodiscard]] size_t ElementSize() const;
 
-        [[nodiscard]] ezr::result<uint8_t*, ktx_error_code_e> Data(uint32_t level = 0, uint32_t layer = 0, uint32_t face = 0);
-        [[nodiscard]] ktxTexture* RawTexture();
+        [[nodiscard]] ezr::result<uint8_t*, ktx_error_code_e> Data(uint32_t level = 0, uint32_t layer = 0, uint32_t face = 0) const;
+        [[nodiscard]] ktxTexture* RawTexture() const;
 
-        [[nodiscard]] bool NeedsTranscode();
+        [[nodiscard]] bool NeedsTranscode() const;
         
-        [[nodiscard]] Version GetVersion();
+        [[nodiscard]] Version GetVersion() const;
 
     private:
-        ktxTexture* texture;
+        ktxTexture* texture = nullptr;
     };
 }
