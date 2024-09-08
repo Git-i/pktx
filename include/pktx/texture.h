@@ -2,12 +2,14 @@
 #include "result.hpp"
 #include <ktx.h>
 #include <string_view>
+#include <fstream>
 namespace pktx
 {
     enum class Version
     {
         One, Two
     };
+    void ktxStreamFromFile(std::ifstream& file, ktxStream* out, std::istream::pos_type& pos);
     class Texture
     {
     public:
@@ -19,7 +21,7 @@ namespace pktx
     public:
         [[nodiscard]] static ezr::result<Texture, ktx_error_code_e> CreateFromNamedFile(std::string_view file_name, ktxTextureCreateFlags flags);
         [[nodiscard]] static ezr::result<Texture, ktx_error_code_e> CreateFromMemory(uint8_t* memory, size_t size, ktxTextureCreateFlags flags);
-
+        [[nodiscard]] static ezr::result<Texture, ktx_error_code_e> CreateFromStream(ktxStream* file, ktxTextureCreateFlags flags);
         
         [[nodiscard]] bool IsArray() const;
         [[nodiscard]] bool IsCubemap() const;

@@ -2,6 +2,32 @@
 #include <string>
 namespace pktx
 {
+    void ktxStreamFromFile(std::ifstream &file, ktxStream *out, std::ifstream::pos_type& pos)
+    {
+        ktxStream& str = *out;
+        str.type = eStreamTypeCustom;
+        // dont really know the difference btw address and allocator address but for our purposed we use them to store data
+        str.data.custom_ptr.address = &file;
+        str.data.custom_ptr.allocatorAddress = &pos;
+        str.read = [](ktxStream* str, void* dst, const ktx_size_t count){
+            std::ifstream& f = *(std::ifstream*)str->data.custom_ptr.address;
+            f.read((char*)dst, count);
+            return KTX_SUCCESS;
+        };
+        str.skip = [](ktxStream* str,const ktx_size_t count){
+            std::ifstream& f = *(std::ifstream*)str->data.custom_ptr.address;
+            f.seekg(count, std::ios::cur);
+            return KTX_SUCCESS;
+        };
+        str.setpos = [](ktxStream* str, const ktx_off_t offset){
+            std::ifstream& f = *(std::ifstream*)str->data.custom_ptr.address;
+            f.seekg(*(std::ifstream::pos_type*)str->data.custom_ptr.allocatorAddress, std::ios::beg);
+            f.seekg(offset, std::ios::cur);
+            return KTX_SUCCESS;
+        };
+        str.destruct = [](ktxStream* str){
+        };
+    }
     ezr::result<Texture, ktx_error_code_e> Texture::CreateFromNamedFile(std::string_view file_name, ktxTextureCreateFlags flags)
     {
         Texture t;
@@ -15,6 +41,12 @@ namespace pktx
         auto e = ktxTexture_CreateFromMemory(memory, size, flags, &t.texture);
         if(e != KTX_SUCCESS) return ezr::err(e);
         return t;
+    }
+    ezr::result<Texture, ktx_error_code_e> Texture::CreateFromStream(ktxStream* file, ktxTextureCreateFlags flags)
+    {
+        ktxStream fstream;
+        fstream.type = eStreamTypeCustom;
+        fstream.data.custom_ptr.address = &file;
     }
     bool Texture::IsArray() const
     {
@@ -60,7 +92,7 @@ namespace pktx
     {
         return ktxTexture_GetElementSize(texture);
     }
-    ezr::result<uint8_t*, ktx_error_code_e> Texture::Data(uint32_t level, uint32_t layer, uint32_t face)
+    ezr::result<uint8_t*, ktx_error_code_e> Texture::Data(uint32_t level, uint32_t layer, uint32_t face) const
     {
         size_t off;
         auto e = ktxTexture_GetImageOffset(texture, level, layer, face, &off);
