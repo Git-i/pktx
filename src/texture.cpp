@@ -46,9 +46,10 @@ namespace pktx
     }
     ezr::result<Texture, ktx_error_code_e> Texture::CreateFromStream(ktxStream* file, ktxTextureCreateFlags flags)
     {
-        ktxStream fstream;
-        fstream.type = eStreamTypeCustom;
-        fstream.data.custom_ptr.address = &file;
+        Texture t;
+        auto e = ktxTexture_CreateFromStream(file, flags, &t.texture);
+        if(e != KTX_SUCCESS) return ezr::err(e);
+        return t;
     }
     bool Texture::IsArray() const
     {
