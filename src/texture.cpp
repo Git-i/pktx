@@ -1,4 +1,6 @@
 #include "pktx/texture.h"
+#include <vulkan/vulkan.h>
+#include <ktxvulkan.h>
 #include <string>
 namespace pktx
 {
@@ -111,4 +113,14 @@ namespace pktx
     {
         return texture->classId == ktxTexture1_c ? Version::One : Version::Two;
     }
+    int Texture::GetVkFormat() const
+    {
+        return ktxTexture_GetVkFormat(texture);
+    }
+    ktx_error_code_e Texture::Transcode(ktx_transcode_fmt_e fmt, ktx_transcode_flags flags)
+    {
+        if(GetVersion() != Version::Two) return KTX_INVALID_OPERATION;
+        return ktxTexture2_TranscodeBasis((ktxTexture2*)texture, fmt, flags);
+    }
+
 }

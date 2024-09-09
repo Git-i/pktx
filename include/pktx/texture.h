@@ -44,6 +44,8 @@ namespace pktx
         [[nodiscard]] bool NeedsTranscode() const;
         
         [[nodiscard]] Version GetVersion() const;
+        [[nodiscard]] int GetVkFormat() const;
+        [[nodiscard]] ktx_error_code_e Transcode(ktx_transcode_fmt_e fmt, ktx_transcode_flags flags);
 
     private:
         ktxTexture* texture = nullptr;
