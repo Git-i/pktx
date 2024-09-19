@@ -37,6 +37,7 @@ namespace pktx
 
         [[nodiscard]] size_t DataSize() const;
         [[nodiscard]] size_t ElementSize() const;
+        [[nodiscard]] size_t ImageSize(uint32_t level) const;
 
         [[nodiscard]] ezr::result<uint8_t*, ktx_error_code_e> Data(uint32_t level = 0, uint32_t layer = 0, uint32_t face = 0) const;
         [[nodiscard]] ktxTexture* RawTexture() const;

@@ -123,5 +123,9 @@ namespace pktx
         if(GetVersion() != Version::Two) return KTX_INVALID_OPERATION;
         return ktxTexture2_TranscodeBasis((ktxTexture2*)texture, fmt, flags);
     }
+    size_t Texture::ImageSize(uint32_t level) const
+    {
+        return ktxTexture_GetImageSize(texture, level);
+    }
 
 }
