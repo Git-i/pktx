@@ -1,0 +1,2 @@
+option('use_custom_ktx', type: 'boolean', value: true)
+option('ktx_path', type: 'string', value: 'C:\Program Files\KTX-Software')

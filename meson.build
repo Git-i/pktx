@@ -4,9 +4,17 @@ dependencies = [
     dependency('ezr'),
     cc.find_library('ktx')
 ]
-incs = include_directories([
-    'include/'
-])
+incs = [
+    'include/',
+]
+if get_option('use_custom_ktx')
+    dependencies += cc.find_library('ktx', dirs: get_option('ktx_path') / 'lib')
+    incs += get_option('ktx_path') / 'include'
+else
+    dependencies += cc.find_library('ktx')
+endif
+
+
 sources = [
     'src/texture.cpp'
 ]
