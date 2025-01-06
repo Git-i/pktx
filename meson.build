@@ -1,8 +1,7 @@
 project('pktx', 'cpp')
 cc = meson.get_compiler('cpp')
 dependencies = [
-    dependency('ezr'),
-    cc.find_library('ktx')
+    dependency('ezr')
 ]
 incs = [
     'include/',
