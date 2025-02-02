@@ -1,7 +1,12 @@
 #include "pktx/texture.h"
-#include <vulkan/vulkan.h>
-#include <ktxvulkan.h>
 #include <string>
+
+extern "C"
+{
+    KTX_API int KTX_APIENTRY
+        ktxTexture_GetVkFormat(ktxTexture* This);
+
+}
 namespace pktx
 {
     void ktxStreamFromFile(std::ifstream &file, ktxStream *out, std::ifstream::pos_type& pos)

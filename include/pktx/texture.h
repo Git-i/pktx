@@ -3,14 +3,26 @@
 #include <ktx.h>
 #include <string_view>
 #include <fstream>
+
+#if defined(_MSC_VER) && defined(USE_DLL)
+#ifdef PKTX_EXPORT
+#define PKTX_API __declspec(dllexport)
+#else
+#define PKTX_API __declspec(dllimport)
+#endif // PKTX_EXPORT
+#else
+#define PKTX_API
+#endif
+
+
 namespace pktx
 {
     enum class Version
     {
         One, Two
     };
-    void ktxStreamFromFile(std::ifstream& file, ktxStream* out, std::istream::pos_type& pos);
-    class Texture
+    void PKTX_API ktxStreamFromFile(std::ifstream& file, ktxStream* out, std::istream::pos_type& pos);
+    class PKTX_API Texture
     {
     public:
         Texture() = default;

@@ -17,5 +17,9 @@ endif
 sources = [
     'src/texture.cpp'
 ]
-lib = library('pktx', sources, include_directories: incs, dependencies: dependencies)
+args = ['-DPKTX_EXPORT']
+if get_option('using_dll')
+    args += '-DUSE_DLL'
+endif
+lib = library('pktx', sources, include_directories: incs, dependencies: dependencies, cpp_args: args)
 pktx_dep = declare_dependency(include_directories: incs, link_with: lib, dependencies:dependencies)
